@@ -27,5 +27,31 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 # モデルのサマリを表示
 model.summary()
 
-# モデルをトレーニング
-# model.fit(...)
+
+
+import tensorflow as tf
+from tensorflow.keras.layers import Input
+from tensorflow.keras.applications import EfficientNetV2
+
+
+# 入力データの準備
+input_shape = (256, 256, 6)
+input_tensor = Input(shape=input_shape)
+
+# EfficientNetV2モデルの構築
+model = tf.keras.Sequential()
+model.add(input_tensor)  # 入力層の追加
+
+# EfficientNetV2 v0モデルの追加
+model.add(EfficientNetV2.EfficientNetV2B0(include_top=True, weights=None, input_tensor=input_tensor, classes=1))
+
+# モデルのコンパイル
+model.compile(
+    loss='mean_squared_error',  # 回帰タスクの損失関数
+    optimizer=tf.keras.optimizers.Adam(lr=0.001),  # 最適化アルゴリズムと学習率
+    metrics=['mae']  # 平均絶対誤差をモニタリング
+)
+
+# モデルのサマリーを表示
+model.summary()
+
